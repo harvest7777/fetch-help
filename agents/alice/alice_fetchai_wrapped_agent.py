@@ -1,5 +1,5 @@
 from agents.models.config import ALICE_SEED
-from agents.models.models import AgentState
+from agents.models.models import SharedAgentState
 from uagents import Agent, Context
 
 alice = Agent(
@@ -11,13 +11,13 @@ alice = Agent(
 )
 
 
-def super_cool_alice_workflow(state: AgentState) -> AgentState:
+def super_cool_alice_workflow(state: SharedAgentState) -> SharedAgentState:
     state.result = f"Alice says: {state.query}"
     return state
 
 
-@alice.on_message(AgentState)
-async def handle_message(ctx: Context, sender: str, msg: AgentState):
+@alice.on_message(SharedAgentState)
+async def handle_message(ctx: Context, sender: str, msg: SharedAgentState):
     state = super_cool_alice_workflow(msg)
     await ctx.send(sender, state)
 

@@ -1,5 +1,5 @@
 from agents.models.config import ORCHESTRATOR_SEED
-from agents.models.models import AgentState
+from agents.models.models import SharedAgentState
 from agents.orchestrator.chat_protocol import chat_proto, send_agent_result_back_to_user
 from uagents import Agent, Context
 
@@ -14,8 +14,8 @@ orchestrator = Agent(
 orchestrator.include(chat_proto, publish_manifest=True)
 
 
-@orchestrator.on_message(AgentState)
-async def handle_agent_response(ctx: Context, sender: str, msg: AgentState):
+@orchestrator.on_message(SharedAgentState)
+async def handle_agent_response(ctx: Context, sender: str, msg: SharedAgentState):
     await send_agent_result_back_to_user(ctx, msg)
 
 

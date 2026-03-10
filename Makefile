@@ -1,8 +1,8 @@
 alice:
-	python -m agents.alice.agent
+	python -m agents.alice.alice_fetchai_wrapped_agent
 
 bob:
-	python -m agents.bob.agent
+	python -m agents.bob.bob_fetchai_wrapped_agent
 
 orchestrator:
-	python -m agents.orchestrator.agent
+	python -m agents.orchestrator.orchestrator_fetchai_wrapped_agent

@@ -43,8 +43,9 @@ make bob
 ```
 
 ## Testing via Agent Inspector
-1. Sign up or sign in to your account on https://agentverse.ai
+1. Sign up or sign in to your account on https://agentverse.ai and https://asi1.ai/
 ![step_0_sign_in.png](docs/step_0_sign_in.png)
+![step_0b_sign_in_asi1.png](docs/step_0b_sign_in_asi1.png)
 1. Open the **Orchestrator Agent Inspector** in your browser **after** you've signed in
 ![step_1_open_inspector.png](docs/step_1_open_inspector.png)
 2. Click **Connect** 

@@ -1,27 +1,21 @@
+import sys
 import os
-from dotenv import load_dotenv
-from uagents import Agent
-from uagents_core.identity import Identity
-import chat_protocol
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../models"))
 
-load_dotenv()
+from config import ORCHESTRATOR_SEED, ALICE_ADDRESS, BOB_ADDRESS
+from uagents import Agent
+from chat_protocol import make_chat_protocol
 
 orchestrator = Agent(
     name="orchestrator",
-    seed=os.getenv("ORCHESTRATOR_SEED_PHRASE"),
+    seed=ORCHESTRATOR_SEED,
     port=8003,
     mailbox=True,
     publish_agent_details=True,
 )
 
-# Derive alice and bob's addresses from their seeds so we know where to route
-ALICE_ADDRESS = Identity.from_seed(seed="soiufisdfkjsjflksdowo24792834", index=0).address
-BOB_ADDRESS = Identity.from_seed(seed=str(os.getenv("BOB_SEED_PHRASE")), index=0).address
-
-chat_protocol.ALICE_ADDRESS = ALICE_ADDRESS
-chat_protocol.BOB_ADDRESS = BOB_ADDRESS
-
-orchestrator.include(chat_protocol.chat_proto, publish_manifest=True)
+chat_proto = make_chat_protocol(ALICE_ADDRESS, BOB_ADDRESS)
+orchestrator.include(chat_proto, publish_manifest=True)
 
 if __name__ == "__main__":
     orchestrator.run()

@@ -1,13 +1,14 @@
+import sys
 import os
-from dotenv import load_dotenv
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../models"))
+
+from config import BOB_SEED
 from uagents import Agent
 import chat_protocol
 
-load_dotenv()
-
 bob = Agent(
     name="bob",
-    seed=os.getenv("BOB_SEED_PHRASE"),
+    seed=BOB_SEED,
     port=8002,
     mailbox=True,
     publish_agent_details=True,

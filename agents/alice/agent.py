@@ -1,13 +1,14 @@
+import sys
 import os
-from dotenv import load_dotenv
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../models"))
+
+from config import ALICE_SEED
 from uagents import Agent
 import chat_protocol
 
-load_dotenv()
-
 alice = Agent(
     name="alice",
-    seed="soiufisdfkjsjflksdowo24792834",
+    seed=ALICE_SEED,
     port=8001,
     mailbox=True,
     publish_agent_details=True,

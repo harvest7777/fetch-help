@@ -20,7 +20,7 @@ def super_cool_alice_workflow(state: SharedAgentState) -> SharedAgentState:
     state.result before returning. That mutation is how her work gets communicated
     back to the orchestrator and ultimately to the user.
     """
-    state.result = f"Alice says: {state.query}"
+    state.result = f"Hello, this is Alice! Your message was: {state.query}"
     return state
 
 

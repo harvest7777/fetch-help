@@ -4,6 +4,7 @@ from uuid import uuid4
 from uagents import Context, Protocol
 from agents.models.config import ALICE_ADDRESS, BOB_ADDRESS
 from agents.models.models import SharedAgentState
+from agents.services.state_service import state_service
 from uagents_core.contrib.protocols.chat import (
     ChatAcknowledgement,
     ChatMessage,
@@ -27,11 +28,18 @@ async def handle_message(ctx: Context, sender: str, msg: ChatMessage):
     )
     ctx.logger.info(f"Received: {text}")
 
-    state = SharedAgentState(
-        chat_session_id=str(ctx.session),
-        query=text,
-        user_sender_address=sender,
-    )
+    chat_session_id = str(ctx.session)
+    state = state_service.get_state(chat_session_id)
+
+    if state is None:
+        state = SharedAgentState(
+            chat_session_id=chat_session_id,
+            query=text,
+            user_sender_address=sender,
+        )
+        state_service.set_state(chat_session_id, state)
+    else:
+        state.query = text
 
     response = None
 
@@ -61,6 +69,10 @@ async def handle_message(ctx: Context, sender: str, msg: ChatMessage):
 @chat_proto.on_message(ChatAcknowledgement)
 async def handle_acknowledgement(ctx: Context, sender: str, msg: ChatAcknowledgement):
     pass
+
+
+def generate_orchestrator_response_from_state(state: SharedAgentState) -> str:
+    return state.result
 
 
 async def send_agent_result_back_to_user(ctx: Context, state: SharedAgentState) -> None:

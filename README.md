@@ -2,6 +2,10 @@
 
 A multi-agent system using the Fetch.ai framework with an orchestrator that routes messages to specialized agents (Alice and Bob).
 
+# Architecture 
+![architecture.png](docs/architecture.png)
+
+
 ## Setup - Video Walkthrough
 https://youtu.be/FPsl3cSIGQw
 

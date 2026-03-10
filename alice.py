@@ -7,7 +7,6 @@ from uagents_core.contrib.protocols.chat import (
    ChatAcknowledgement,
    ChatMessage,
    EndSessionContent,
-   StartSessionContent,
    TextContent,
    chat_protocol_spec,
 )
@@ -18,7 +17,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-alice = Agent(name="alice", seed=os.getenv("ALICE_SEED_PHRASE"), port=8001, endpoint=["http://localhost:8001/submit"])
+alice = Agent(
+    name="alice",
+    # seed=os.getenv("ALICE_SEED_PHRASE"),
+    seed="soiufisdfkjsjflksdowo24792834",
+    mailbox=True,
+    port=8001,
+    publish_agent_details=True
+)
 
 # Initialize the chat protocol with the standard chat spec
 chat_proto = Protocol(spec=chat_protocol_spec)
@@ -35,10 +41,10 @@ fund_agent_if_low(str(alice.wallet.address()))
 async def introduce_agent(ctx: Context):
     pass
 
-# @alice.on_interval(period=5.0)
-# async def ping_bob(ctx: Context):
-#     await ctx.send(BOB_ADDRESS, Message(content="Hello this is Alice"))
-#     ctx.logger.info("Sent message to Bob")
+@alice.on_interval(period=5.0)
+async def ping_bob(ctx: Context):
+    await ctx.send(BOB_ADDRESS, Message(content="Hello this is Alice"))
+    ctx.logger.info("Sent message to Bob")
 
 @alice.on_message(model=Message)
 async def echo(ctx: Context, sender: str, msg: Message):
@@ -75,7 +81,7 @@ async def handle_message(ctx: Context, sender: str, msg: ChatMessage):
 # Handle acknowledgements for messages this agent has sent out
 @chat_proto.on_message(ChatAcknowledgement)
 async def handle_acknowledgement(ctx: Context, sender: str, msg: ChatAcknowledgement):
-   ctx.logger.info(f"Received acknowledgement from {sender} for message {msg.acknowledged_msg_id}")
+    pass
 
 alice.include(chat_proto, publish_manifest=True)
 

@@ -10,13 +10,17 @@ alice = Agent(
     publish_agent_details=True,
 )
 
-# -------------------------------------------------------
-# YOUR CODE GOES HERE
-# This handler is called whenever alice receives a message.
-# -------------------------------------------------------
+
+def super_cool_alice_workflow(state: AgentState) -> AgentState:
+    state.result = f"Alice says: {state.query}"
+    return state
+
+
 @alice.on_message(AgentState)
 async def handle_message(ctx: Context, sender: str, msg: AgentState):
-    ctx.logger.info(f"[{msg.session_id}] from {msg.user_sender_address}: {msg.query}")
+    state = super_cool_alice_workflow(msg)
+    await ctx.send(sender, state)
+
 
 if __name__ == "__main__":
     alice.run()

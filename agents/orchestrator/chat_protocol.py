@@ -59,3 +59,17 @@ def make_chat_protocol(alice_address: str, bob_address: str) -> Protocol:
         pass
 
     return chat_proto
+
+
+async def send_agent_result_back_to_user(ctx: Context, state: AgentState) -> None:
+    await ctx.send(
+        state.user_sender_address,
+        ChatMessage(
+            timestamp=datetime.now(tz=timezone.utc),
+            msg_id=uuid4(),
+            content=[
+                TextContent(type="text", text=state.result),
+                EndSessionContent(type="end-session"),
+            ],
+        ),
+    )

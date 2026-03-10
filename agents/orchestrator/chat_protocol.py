@@ -26,7 +26,6 @@ async def handle_message(ctx: Context, sender: str, msg: ChatMessage):
         item.text for item in msg.content if isinstance(item, TextContent)
     )
     ctx.logger.info(f"Received: {text}")
-    ctx.logger.info(ctx.session_history())
 
     state = SharedAgentState(
         chat_session_id=str(ctx.session),
@@ -34,26 +33,29 @@ async def handle_message(ctx: Context, sender: str, msg: ChatMessage):
         user_sender_address=sender,
     )
 
+    response = None
+
     if "alice" in text.lower():
         await ctx.send(ALICE_ADDRESS, state)
-        response = "Routing to Alice!"
+        ctx.logger.info("Routing to Alice!")
     elif "bob" in text.lower():
         await ctx.send(BOB_ADDRESS, state)
-        response = "Routing to Bob!"
+        ctx.logger.info("Routing to Bob!")
     else:
         response = "Mention Alice or Bob in your message and I'll route it to them."
 
-    await ctx.send(
-        sender,
-        ChatMessage(
-            timestamp=datetime.now(tz=timezone.utc),
-            msg_id=uuid4(),
-            content=[
-                TextContent(type="text", text=response),
-                EndSessionContent(type="end-session"),
-            ],
-        ),
-    )
+    if response:
+        await ctx.send(
+            sender,
+            ChatMessage(
+                timestamp=datetime.now(tz=timezone.utc),
+                msg_id=uuid4(),
+                content=[
+                    TextContent(type="text", text=response),
+                    EndSessionContent(type="end-session"),
+                ],
+            ),
+        )
 
 
 @chat_proto.on_message(ChatAcknowledgement)
